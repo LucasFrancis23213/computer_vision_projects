@@ -1,5 +1,5 @@
-import os
-os.chdir('D:/2024Fall/cv/Projects/hand_tracking_projects')
+# import os
+# os.chdir('D:/2024Fall/cv/Projects/hand_tracking_projects')
 
 import cv2
 import mediapipe as mp
@@ -18,12 +18,9 @@ class HandIdentifier:
                                        min_detection_confidence=self.detectCon,
                                        min_tracking_confidence=self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
-        self.results = []
+        self.results, self.landmarks = [], []
 
     def findHands(self, image, draw: bool = True):
-
-        # 反转成自拍模式
-        image = cv2.flip(image, 1)
         RGB_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(image)
         # 如果检测到了手，获取并绘制手部关键点
@@ -53,7 +50,10 @@ class HandIdentifier:
                 if draw:
                     cv2.circle(img=image, center=(center_x, center_y),
                                radius=10, color=(255, 0, 0), thickness=cv2.FILLED)
+        self.landmarks = landmark_position
         return landmark_position
+
+
 
 
 def main():
